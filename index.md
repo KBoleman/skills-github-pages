@@ -1,8 +1,4 @@
 ---
-title: Welcome to my blog;
-
-Timothy Coleman
-UCLA Undergraduate Student
-
+title: Welcome to my blog
 ---
 
