@@ -21,7 +21,7 @@ The following services / resouese are utilized:
 - Amazon Simple Storage Service (S3)
 - Autoscaling Groups (ASGs)
 -----
-## Setup Networking
+## Setup Networking (VPC)
 First things first, what even is networking? Truthfully, I do not know for sure. Based on what I do know, I presume that networking refers to the way that computers connect and share data.
 
 AWS Definition of Computer Networking: "Computer networking refers to interconnected computing devices that can exchange data and share resources with each other." I was pretty close.
@@ -46,8 +46,10 @@ The only change I will make to the default VPC setup is the addition of two NAT 
   - route tables: directs network traffic
   - VPC Endpoints / Internet Gateways: provide internet connectivity for public and private subnets respectively
 -----
-## Resource Security
+## Resource Security (SGs)
 ***Security Groups*** control inbound and outbound traffic for resources like servers. VPCs come with a default security group, however, additional groups can be configured with custom inbound and outbound rules.
+
+My goal here is to
 
 ### Steps
 1. I start a new security group
@@ -69,8 +71,17 @@ The only change I will make to the default VPC setup is the addition of two NAT 
 10. I create the second security group
 
 To my understanding, the first security group named "Load Balancer Security Group" manages in incoming traffic from the internet and the second security group named "Web Server Security Group" manages incoming traffic from the initial load balancer to the web server. I'm curious as to why two load balancers are placed inbetween the server and the internet. I presume that the Web Server Security Group is added in case the intial load balancer fails, essentially serving as a last line of defense.
+
+### Takeaways
+- Security Groups control the incoming and outgoing traffic for resources
 -----
-## Access Management
+## Access Management (IAM)
+
+AWS Identity and Access Management securely controls access to AWS services. It serves as the hub for managing users, security credentials, and permissions to users and apps.
+
+
+
+
 
 
 
