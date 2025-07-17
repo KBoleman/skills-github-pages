@@ -6,7 +6,7 @@ Level: 100\
 Cost: ~ $0.44 per hour
 
 
-  Hello, my name is Timothy Coleman and I'm a UCLA undergrad working towards becoming a Solutions Architect. This is first of a series of cloud projects that I will document on GitHub. In making these posts, I aim to build cloud-engineering and architectural skills, improve my understanding of cloud principles and GitHub, and demonstrate commitment, learning, and growth.
+Hello, my name is Timothy Coleman and I'm a UCLA undergrad working towards becoming a Solutions Architect. This is first of a series of cloud projects that I will document on GitHub. In making these posts, I aim to build cloud-engineering and architectural skills, improve my understanding of cloud principles and GitHub, and demonstrate commitment, learning, and growth.
 
 
 The goal of this project is to develop a simple web application infrastructure
@@ -36,7 +36,8 @@ Quick Notes:
   
 Subnets are bound to a single Availability Zone. Launching AWS resources in multiple Availability Zones protects applications from failure of a single Availability Zone. Each subnet is connecteed to a ***route table***, which directs network traffic. The public subnets are then routed to an ***internet gateway***, a horizontally scaled, redundant, highly available VPC component that allows the VPC to communicate with the internet. The private subnets are linked to a ***VPC Endpoint*** that provides connectivity to other AWS resources instead of the internet. The web server will be hosted in private subnet and connected to a storage service for security.
 
-The only change I will make to the default VPC setup is the addition of two NAT gateways. These gateways enable the web server to connect to the internet and are paid services.
+###Steps
+The only change I will make to the default VPC setup is the addition of two NAT gateways, one for each private subnet. These gateways enable the web server to connect to the internet and are paid services.
 
 Takeaways:
 - VPCs are enviroments that securely host and route AWS services
@@ -45,7 +46,9 @@ Takeaways:
   - route tables: directs network traffic
   - VPC Endpoints / Internet Gateways: provide internet connectivity for public and private subnets respectively
 -----
-## 
+##Resource Security
+***Security Groups*** control inbound and outbound traffic for resources like servers. VPCs come with a default security group, however, 
+
 
 
 
