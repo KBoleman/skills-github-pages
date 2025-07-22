@@ -49,7 +49,7 @@ The only change I will make to the default VPC setup is the addition of two NAT 
 ## Resource Security (SGs)
 ***Security Groups*** control inbound and outbound traffic for resources like servers. VPCs come with a default security group, however, additional groups can be configured with custom inbound and outbound rules.
 
-My goal here is to
+My goal here is to manage the incoming traffic for the web server and the resource within the public subnets.
 
 ### Steps
 1. I start a new security group
@@ -78,6 +78,44 @@ To my understanding, the first security group named "Load Balancer Security Grou
 ## Access Management (IAM)
 
 AWS Identity and Access Management securely controls access to AWS services. It serves as the hub for managing users, security credentials, and permissions to users and apps.
+
+My goal here is to designate which AWS resources the web server can use.
+
+### Quick Notes:
+- ***IAM Polices***: a set of permissions
+- Policies are assigned to ***IAM Roles***, which may be a user or service such as EC2
+- ***EC2 Instance Profile***: a container that holds an IAM role and connects it to an EC2 instance
+- ***AWS Systems Manager***: a service that allows EC2 instances to be administered and managed without accessing them over the public internet
+
+### Steps
+1. Create a new IAM role and attach it to the EC2 service
+2. For the use case, select "EC2 Role for AWS Systems Manager" (policy name will be "AmazonSSMManagedInstanceCore")
+3. Lastly, name the role "WebServerInstanceProfile"
+
+~~This last step confuses me. The name of the role I just created indicates that it is an Instance Profile, which is a container for IAM roles. But how can a role hold another role within it?~~
+
+Okay, I think I understand the difference between an AWS Systems Manager, a role, and an Instance Profile
+1. AWS Systems Manager is the job specific to an EC2 with specific permissions and abilities. However, AWS Systems Manager is NOT an actual role, more like a type of EC2.
+2. For comparison, think about the difference between a job and a job title. A job comes with general obligations, responsibilities, and power, comparable to a role in AWS. The term "manager" dilineates specific tasks and responsibilities, denoting a _type_ of job.
+3. By creating a role that provides permissions (in this case administrative and managerial authority) to any EC2 that it connects to, an Instance Profile is formed. To further the analogy in #2, think of an Instance Profile as job for EC2. Instances may be replaced in the same manner that an employee is and, similarly, any new instance that assumes that job (instance profile) will have the same tasks, expectations, and reach.
+-----
+## Deploy Compute (EC2)
+
+AWS Elastic Compute Cloud provides scalable, on-demand computing capacity to AWS cloud infrastructure. EC2 can be used to create virual servers, configure security and networking, and manage storage.
+
+My goal here is to deploy a web server using EC2
+
+### Steps
+1. Launch an instance named "mywebserver"
+2. Select the Amazon Linux 2023 Amazon Machine Image (AMI) and choose 64-bit (x86) architecture
+3. Choose the t2.micro instance type, which provides 1 vCPU and 1 GiB of memory, then proceed without a key pair (because connections to the EC2 are made through instance profiles and not direct SSH access)
+4. Under network settings, associate this server with the VPC and one of the ***private*** subnets set up earlier
+5. Under firewall, select the "Web Server Security Group" created earlier to manage traffic from the public subnets
+6. Under advanced details, choose the "WebServerInstanceProfile". This will enable private connection to the web server
+7. Enter the code below into the User Data field to install the necessary PHP server components
+
+
+
 
 
 
