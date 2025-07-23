@@ -114,8 +114,49 @@ My goal here is to deploy a web server using EC2
 6. Under advanced details, choose the "WebServerInstanceProfile". This will enable private connection to the web server
 7. Enter the code below into the User Data field to install the necessary PHP server components
 
+EC2 is one of the essential services of AWS and its complexity matches its importance. There are so many different ways to configure EC2 instances and many applications as well.
+-----
+## Administer Web Server (SSM)
 
+Session Manager is a fully managed AWS Systems Manager capability that allows users to manager their EC2 instances, virtual machines, edge devices, and on-premises servers.
 
+My goal here is to securely access the web server for administrative purposes.
+
+### Steps
+1. Connect to the web server using Session Manager
+2. Copy and paste the following command lines into the shell:
+
+   echo -n 'Private IPv4 Address: ' && ifconfig enX0 | grep -i mask | awk '{print $2}'| cut -f2 -d: && \
+   echo -n 'Public IPv4 Address: ' && curl checkip.amazonaws.com
+
+   This will produce two IP addresses to the screen
+   - Private IP Address - evidence of successful connection without connection to the internet
+   - Public IP Address - the Elastic IP address allocated to the NAT gateway, allowing private subnet resources (the web server) to communicate with the internet
+
+### My Documentation of Post Step 1 Confusion
+I intially experience trouble connecting to the instance via Sessions Manager. I kept running into the following error message:
+
+"**SSM Agent is not online**
+The SSM Agent was unable to connect to a Systems Manager endpoint to register itself with the service."
+
+This was very confusing because I could see that I chose the proper IAM role to enable connection. The instance's subnet id read the id to a public subnet, so I considered if I misconfigured my network. Because the instance only displayed a private IPv4 address, I ruled out misconfiguration to a public subnet. Then I considered if Security Groups played a role in this problem. Creating a new instance from scratch was my absolute last option, so I looked for ways to edit the security groups. I found just that under the Actions button. Finally, I reached the page to manange security groups, and lo and behold:
+
+I chose the wrong security group. I most defintely skipped over the firewall process while configuring the instance. Just goes to show the importance of the little things and attention to detail when completing projects and running complex systems.
+
+Okay, so I changed the security group and I still can't connect. Awesome. I suspect that the issue is another skipped step.
+
+I decided to delete the instance and create a new one so I can keep the same name. However, I recognize that in a professional context new resources must be configured and deployed before old resources are removed. In the future, I will create before deleting. While setting up this new instance, I realized that I left the default public subnet instead of choosing a private subnet. Yeah, I'm never working on AWS in a lecture ever again. After completing the rest of the steps, I can finally connect. Hallelujah.
+
+### Takeaways
+- Session Manager _requires_ an IAM instance profile to connect with an instance
+- Without a Key Pair, instance require a private subnet to be connected to using Sessions Manager
+-----
+
+## Load Balancing (ALB)
+
+Application Load Balancers distribute traffic across your infrastructure.
+
+My goal here is to route incoming web traffic to the web server instance. The load balancer will handle network configuration and securty policies to enable secure communication between clients and the web server
 
 
 
