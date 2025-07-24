@@ -170,7 +170,7 @@ My goal here is to route incoming web traffic to the web server instance. The lo
    - Availability Zone 1: project-subnet-public1
    - Availability Zone 2: project-subnet-public2
 3. Replace the default security group with the Load Balancer Securty Group created earlier
-4. Leave the protocol and port on their defaults of HTTP & 80, then create a target group to define which instances the load balancer will route traffic to
+4. Leave the protocol and port on their defaults of HTTP & 80, then click "create a target group" to define which instances the load balancer will route traffic to. Do not delete the original tab after a new tab pops up.
 5. Configure the target group with the following settings:
   - Target Type: Instances
   - Target Group Name: WebServerTargetGroup
@@ -183,7 +183,20 @@ My goal here is to route incoming web traffic to the web server instance. The lo
   - Health Checks Path: /
   - Key: Name
   - Valie: WebServerTargetGroup
+4. After registering, select the instance labeled "webserver" and click the button "Include as pending below". This will configure the load balancer to route traffic from the internet to the EC2 web server instance
+5. Finalize the target group, then refresh the original tab. If the previous configuration disappear, simply readd them to their respective forms.
+6. Under Listening and Routers, select the newly created target group and hit "Create load balancer" to finish.
+-----
+## Testing the Web Server
+
+The web server must be fully provised before and the target group must be shown as healthy before accessing the web server
+
+### Steps
+1. Check that the load balancer state is active
+2. Check that a healthy target is listed after clicking the WebServerTargetGroup link under the Listening and Rules tab
+3. Find the load balancer's public URL under the DNS name and search it in the browser
 4. 
+
 
 
 
