@@ -114,7 +114,8 @@ My goal here is to deploy a web server using EC2
 6. Under advanced details, choose the "WebServerInstanceProfile". This will enable private connection to the web server
 7. Enter the code below into the User Data field to install the necessary PHP server components
 
-EC2 is one of the essential services of AWS and its complexity matches its importance. There are so many different ways to configure EC2 instances and many applications as well.
+### Takeaway
+- EC2 is one of the essential services of AWS and its complexity matches its importance. There are so many different ways to configure EC2 instances and many applications as well.
 -----
 ## Administer Web Server (SSM)
 
@@ -150,6 +151,7 @@ I decided to delete the instance and create a new one so I can keep the same nam
 ### Takeaways
 - Session Manager _requires_ an IAM instance profile to connect with an instance
 - Without a Key Pair, instance require a private subnet to be connected to using Sessions Manager
+- Projects go a whole lot smoother when you dedicate time to focus on them exclusive
 -----
 
 ## Load Balancing (ALB)
@@ -158,7 +160,30 @@ Application Load Balancers distribute traffic across your infrastructure.
 
 My goal here is to route incoming web traffic to the web server instance. The load balancer will handle network configuration and securty policies to enable secure communication between clients and the web server
 
-
+### Steps
+1. Create an Application Load Balancer
+2. Configure the load balancer with the following settings:
+   - Load balance name: WebServerLoadBalancer
+   - Scheme: internet-facing
+   - Load balancer IP address type: IPv4
+   - VPC: project-vpc
+   - Availability Zone 1: project-subnet-public1
+   - Availability Zone 2: project-subnet-public2
+3. Replace the default security group with the Load Balancer Securty Group created earlier
+4. Leave the protocol and port on their defaults of HTTP & 80, then create a target group to define which instances the load balancer will route traffic to
+5. Configure the target group with the following settings:
+  - Target Type: Instances
+  - Target Group Name: WebServerTargetGroup
+  - Protocol: HTTP
+  - Port: 80
+  - IP Address Type: IPv4
+  - VPC: project-vpc
+  - Protcol Version: HTTP1
+  - Health Check Protocol: HTTP
+  - Health Checks Path: /
+  - Key: Name
+  - Valie: WebServerTargetGroup
+4. 
 
 
 
