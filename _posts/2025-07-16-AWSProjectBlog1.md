@@ -112,7 +112,34 @@ My goal here is to deploy a web server using EC2
 4. Under network settings, associate this server with the VPC and one of the ***private*** subnets set up earlier
 5. Under firewall, select the "Web Server Security Group" created earlier to manage traffic from the public subnets
 6. Under advanced details, choose the "WebServerInstanceProfile". This will enable private connection to the web server
-7. Enter the code below into the User Data field to install the necessary PHP server components
+7. Enter the code below into the User Data field to install the necessary PHP server components and finalize the instance
+-----
+#!/bin/bash
+yum update -y
+# Install Session Manager agent
+yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+systemctl enable amazon-ssm-agent
+# Install and start the php web server
+dnf install -y httpd wget php-json php
+chkconfig httpd on
+systemctl start httpd
+systemctl enable httpd
+
+# Install AWS SDK for PHP
+wget https://docs.aws.amazon.com/aws-sdk-php/v3/download/aws.zip
+unzip aws.zip -d /var/www/html/sdk
+rm aws.zip
+
+#Install the web pages for our lab
+if [ ! -f /var/www/html/index.html ]; then
+rm index.html
+fi
+cd /var/www/html
+wget https://ws-assets-prod-iad-r-iad-ed304a55c2ca1aee.s3.us-east-1.amazonaws.com/2aa53d6e-6814-4705-ba90-04dfa93fc4a3/index.php
+
+# Update existing packages
+dnf update -y
+-----
 
 ### Takeaway
 - EC2 is one of the essential services of AWS and its complexity matches its importance. There are so many different ways to configure EC2 instances and many applications as well.
@@ -134,7 +161,7 @@ My goal here is to securely access the web server for administrative purposes.
    - Private IP Address - evidence of successful connection without connection to the internet
    - Public IP Address - the Elastic IP address allocated to the NAT gateway, allowing private subnet resources (the web server) to communicate with the internet
 
-### My Documentation of Post Step 1 Confusion
+### Troubleshooting
 I intially experience trouble connecting to the instance via Sessions Manager. I kept running into the following error message:
 
 "**SSM Agent is not online**
@@ -189,21 +216,56 @@ My goal here is to route incoming web traffic to the web server instance. The lo
 -----
 ## Testing the Web Server
 
-The web server must be fully provised before and the target group must be shown as healthy before accessing the web server
+The web server must be fully provised before and the target group must be shown as healthy before accessing the web server.
+
+My goal here is to connect to the web server via browser
 
 ### Steps
 1. Check that the load balancer state is active
 2. Check that a healthy target is listed after clicking the WebServerTargetGroup link under the Listening and Rules tab
 3. Find the load balancer's public URL under the DNS name and search it in the browser
-4. 
+
+
+### Troubleshooting
+
+The server failed to load after searching the URL and a 504 error was displayed instead. I returned to my registered targets and found that they had failed the health checks. After doing some digging, I realized that I created my load balancer security group with no outbound rules. I presume that means the page was empty because the browser was not able to recieve the data from the load balancer.
+
+### Takeaways
+- Load balancers are responsible for the communication between cloud resources and internet resources
+- Security groups manage how data is recieved and transferred via load balancer
+-----
+## Storage (S3)
+
+Amazon Simple Storage Service is an object storage service offering scalability, data availability, performance, and security. This service enables data management, analysis, and protection for a variety of use cases.
+
+My goal here is to upload files to S3 and view them using the web server
+
+### Steps
+1. Create and name a bucket. Leave the settings on their defaults.
+2. Download the required files, unarchive them, then upload them to the bucket (files found here:https://catalog.workshops.aws/aws101/en-US/2-build-web-server/08-storage)
+3. Add the "AmazonS3ReadOnlyAccess" permission to the Instance Profile through IAM. This will give the web server permission to list the contents of the bucket
+4. Search the name of the S3 bucket using the web server
+
+## Takeaways
+- S3 is used to store and use data
+- Buckets are very easy to set up
+- Instances, by default, need permission to access buckets
+-----
+## Scaling (ASG)
+
+Auto Scaling Groups are collections of EC2 instances, logically grouped for automatic scaling and management.
+
+My goals here is to create an ASG to circumvent my single point of failure.
+
+### Steps
+1. Create a new ASG
+2. Create a launch template
+3. Choose the same VPC but a _different_ AZ from the one you choose for the active web server
+4. Configure the rest of the ASG. Most of the options can be left to their defaults.
+
+### Takeways
+- ASGs can be used in cases of failure but also in cases of scaling to accomodate growth.
 
 
 
-
-
-
-
-
-
- 
 
