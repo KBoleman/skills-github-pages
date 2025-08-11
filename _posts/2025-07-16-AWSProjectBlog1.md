@@ -11,7 +11,7 @@ Hello, my name is Timothy Coleman and I'm a UCLA undergrad working towards becom
 
 The goal of this project is to develop a simple web application infrastructure
 
-The following services / resouese are utilized:
+The following services / resources are utilized:
 - Virtual Private Cloud (VPC)
 - Security Groups (SGs)
 - Identity and Access Management (IAM)
