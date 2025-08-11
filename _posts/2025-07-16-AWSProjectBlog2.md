@@ -11,3 +11,9 @@ Hello, my name is Timothy Coleman and I'm a UCLA undergrad working towards becom
 
 The goal of this project is to processing file-based media into videos for web streaming
 
+The following services / resources are utilized:
+- Amazon S3
+- Amazon CloudFront
+- Amazon MediaConvert
+
+- 
