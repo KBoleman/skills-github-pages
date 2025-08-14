@@ -2,7 +2,7 @@
 ### Processing Videos for Web Streaming
 ### Timothy Coleman
 ### 08/09/25
-Level: 100
+Level: 100  
 Cost: < $1.00 for 2 minutes of content
 
 
