@@ -81,4 +81,46 @@ Apple HLS: an adaptive bitrate stack that encodes the source into mutliple files
 
 ### Steps
 1. Create a MediaConvert job
-   - 
+   - Input the following url into Input 1
+     https://static.us-east-1.prod.workshops.aws/public/09743ab7-164b-4f79-a072-45f200ee05e0/assets/VANLIFE.m2ts
+      - This URL contains the video content
+   - Add an Apple HLS output group
+   - Create a unique custom group name
+   - Add the destination bucket + the following text "/assets/VANLIFE/HLS/"
+   - Scroll down and add two more outputs (not output groups)
+   - Set the configurations for Output 1
+      * Name: _360
+      * Segment: $dt$ , this appends datetime to each media segment for identification and the prevention of accidental overrides
+      * Resolution (w x h): 640 and 360
+      * Rate Control Mode: QVBR
+      * Quality Tunning Level: Single Pass HQ
+      * Max bits/s: 1000000
+   - Set the configurations for Output 1
+      * Name: _540
+      * Segment: $dt$
+      * Resolution (w x h): 960 and 540
+      * Rate Control Mode: QVBR
+      * Quality Tunning Level: Single Pass HQ
+      * Max bits/s: 2000000
+   - Set the configurations for Output 1
+      * Name: _720
+      * Segment: $dt$ , this appends datetime to each media segment for identification and the prevention of accidental overrides
+      * Resolution (w x h): 1280 and 720
+      * Rate Control Mode: QVBR
+      * Quality Tunning Level: Single Pass HQ
+      * Max bits/s: 3000000
+   - Under the AWS Intergration tab, select the recently created MediaConvert role
+   - Select a 10 second status update interval
+   - Finish creating the job
+  1. Create Job Template
+   - Under Job Details, select Export JSON
+   - Import this file into a job template
+   - Create a name for the job template
+   - After creating the template, export its JSON file
+
+-----
+## Playback
+
+I ran into a problem accessing the video through the browser; the page read Access Denied. I jumped back to the MediaConvert configuration and realized that I forgot to add the "/assets/VANLIFE/HLS/" to the back of the destination when creating the job. After correcting my error, I edited the instructions to reflect the proper setup. Still, after correcting this mistake, I was denied access to the content through the browser. So now I'm thinking "Okay, Access Denied? That sounds like an S3 or CloudFront issue". When I'm checking to verfiy the CORS policy has been enabled, I notice that the destination bucket blocks all public access. Once I allow unconditional public access, I'm able to view the video in the browser. Unconditional public access isn't ideal so, I check for ways to mimimize access.
+
+I removed all public access once again, but I'm still able to access the page now. I thought that this could've been a cached video and not coming directly from the bucket, but when I disable caching in CloudFront I'm still able to access the video. The most likely cause of my problem was a typo in pasting the URL. One extra period or dash at the end produces the same error message I mentioned before.
