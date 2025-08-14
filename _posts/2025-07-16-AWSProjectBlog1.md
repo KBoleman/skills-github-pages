@@ -2,7 +2,7 @@
 ### Setting up a basic Linux-Based Web Server
 ### Timothy Coleman
 ### 07/16/25
-Level: 100\
+Level: 100
 Cost: ~ $0.44 per hour
 
 
