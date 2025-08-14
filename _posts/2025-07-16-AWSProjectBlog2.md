@@ -15,5 +15,18 @@ The following services / resources are utilized:
 - Amazon S3
 - Amazon CloudFront
 - Amazon MediaConvert
+-----
+## Storage
 
-- 
+First, 2 S3 buckets are created--one for source assets and another for outputs from MediaConvert jobs. Public read access is only allowed through Amazon CloudFront, a content delivery network (CDN). A Cross Origin Resource Sharing (CORS) policy bucket is applied to the outputs bucket.
+
+CDN Benefits:
+1. Improved performance to end users
+2. Reduces load on backend origin infrastructure by caching content closer to the edge
+
+### Steps
+1. Create a Storage Bucket
+   - 
+
+
+
