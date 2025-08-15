@@ -315,7 +315,7 @@ I removed all public access once again, but I'm still able to access the page no
                  "configurationId": "90bf2f16-1bdf-4de8-bc24-b4bb5cffd5b2",
                  "object": {
                    "eTag": "2fb17542d1a80a7cf3f7643da90cc6f4-18",
-                   "key": "VANLIFE_test.m2ts",
+                   "key": "",
                    "sequencer": "005989030743D59111",
                    "size": 143005084
                  },
@@ -323,8 +323,8 @@ I removed all public access once again, but I'm still able to access the page no
                    "ownerIdentity": {
                      "principalId": ""
                    },
-                   "name": "vod-source-us-east1-YOURLASTNAME-MMDDYYYY",
-                   "arn": "arn:aws:s3:::vod-source-us-east1-YOURLASTNAME-MMDDYYYY"
+                   "name": "",
+                   "arn": ""
                  },
                  "s3SchemaVersion": "1.0"
                },
@@ -341,7 +341,7 @@ I removed all public access once again, but I'm still able to access the page no
              }
            ]
          }
-   
+   - Change "name" to the name of the destination bucket, change the arn to the destination bucket's ARN, and change the key the the name of        whatever asset you add the the folder, 
    - Save the JSON, then test the event to verify proper functioning. Successful execution will read:
 
             {
@@ -354,7 +354,9 @@ I removed all public access once again, but I'm still able to access the page no
          }
      
 4. Test Automation
-   -k
+   -
+
+I experienced famiilar difficulties trying to access the video through the web browser. Blue hat Sally. I was able to access the video by copying the CloudFront distrubution name, adding the manifest file's key to the end (this is the path URL to the file), then search the conjoined urls
    
 ## Takeaways
 * If a role is not create for a particular service, then the service will not trust it, and not allow the role to be used
