@@ -82,7 +82,7 @@ Apple HLS: an adaptive bitrate stack that encodes the source into mutliple files
 
 ### Steps
 1. Create a MediaConvert job
-   - Input the following url into Input 1
+   - Input the following url into Input 1  
      https://static.us-east-1.prod.workshops.aws/public/09743ab7-164b-4f79-a072-45f200ee05e0/assets/VANLIFE.m2ts
       - This URL contains the video content
    - Add an Apple HLS output group
@@ -91,7 +91,7 @@ Apple HLS: an adaptive bitrate stack that encodes the source into mutliple files
    - Scroll down and add two more outputs (not output groups)
    - Set the configurations for Output 1
       * Name: _360
-      * Segment: \\$dt\\$ , this appends datetime to each media segment for identification and the prevention of accidental overrides
+      * Segment: \$dt\\$ , this appends datetime to each media segment for identification and the prevention of accidental overrides
       * Resolution (w x h): 640 and 360
       * Rate Control Mode: QVBR
       * Quality Tunning Level: Single Pass HQ
