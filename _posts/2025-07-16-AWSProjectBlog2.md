@@ -190,107 +190,107 @@ I removed all public access once again, but I'm still able to access the page no
    - Under general configuration, set the timeout to 2 minutes
    - Copy the following code and paste it into the lambda_function.py file:
 
-import logging
-import subprocess
-import xml.etree.ElementTree as ET
-import boto3
-import os 
-import json
-import uuid
-
-S3 = boto3.client("s3")
-LOGGER = logging.getLogger('boto3')
-LOGGER.setLevel(logging.INFO)
-REGION = os.environ['AWS_DEFAULT_REGION']
-
-\# Get the account-specific mediaconvert endpoint for this region and chache them
-if 'MEDIACONVERT_ENDPOINT' in os.environ:
-    ENDPOINTS = os.environ["MEDIACONVERT_ENDPOINT"]
-else:
-    try:
-        MC = boto3.client('mediaconvert', region_name=REGION)
-        response = MC.describe_endpoints()
-    except Exception as e:
-        print("Exception:\n", e)
-        raise 
-    else:
-        ENDPOINTS = response["Endpoints"][0]["Url"]
-        # Cache the mediaconvert endpoint in order to avoid getting throttled on
-        # the DescribeEndpoints API.
-        os.environ["MEDIACONVERT_ENDPOINT"] = ENDPOINTS
-
-\# Add the account-specific endpoint to the client session 
-MEDIACONVERT = boto3.client('mediaconvert', region_name=REGION, endpoint_url=ENDPOINTS)
-
-destinationS3 = 's3://' + os.environ['DestinationBucket']
-mediaConvertRole = os.environ['MediaConvertRole']
-
-def lambda_handler(event, context):
-    statusCode = 200
-    body = {}
-    
-    try:
-        #Grab Event Info + Enviornment Variables
-        assetID = str(uuid.uuid4())
-        jobMetadata = {'assetID': assetID}
-        sourceS3Bucket = event['Records'][0]['s3']['bucket']['name']
-        sourceS3Key = event['Records'][0]['s3']['object']['key']
-        sourceS3 = 's3://'+ sourceS3Bucket + '/' + sourceS3Key
-        sourceS3Basename = os.path.splitext(os.path.basename(sourceS3))[0]
-        
-        # Loop through records provided by S3 Event trigger
-        for s3_record in event['Records']:
-            LOGGER.info("Working on new s3_record...")
-            
-            # Extract the Key and Bucket names for the asset uploaded to S3
-            key = s3_record['s3']['object']['key']
-            bucket = s3_record['s3']['bucket']['name']
-            LOGGER.info("Bucket: {} \t Key: {}".format(bucket, key))
-            
-            # Load Job Settings Template
-            LOGGER.info("Loading Job Settings...")
-            with open('job_template.json') as json_data:
-                jobTemplate = json.load(json_data)
-                LOGGER.info("Input JobSettings:")
-                jobSettings=jobTemplate['Settings']
-                jobSettings['Inputs'][0]['FileInput'] = sourceS3
-               
-            basekey = 'assets/' 
-            S3KeyHLS = basekey + assetID +'/HLS/'+ sourceS3Basename
-    
-            LOGGER.info("Creating MediaConvert Job...") 
-            
-            #update job.json
-            update_job_settings(jobSettings,assetID,destinationS3,S3KeyHLS)
-            MEDIACONVERT.create_job(Role=mediaConvertRole, UserMetadata=jobMetadata, Settings=jobSettings, StatusUpdateInterval="SECONDS_10")
-
-    except Exception as e:
-        print ('Exception: %s' % e)
-        statusCode = 500
-        raise
-
-    finally:
-        return {
-            'statusCode': statusCode,
-            'body': json.dumps(body),
-            'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
-        
-    }    
-def update_job_settings(jobsettings,assetID,destinationBucket,S3HLS):
-    """
-    Update MediaConvert Job Settings
-    
-    :param jobsettings:         Loaded JobSettings JSON template
-    :param assetID:             Tagged Metadata ID
-    :param destinationBucket:   Bucket for Transcoded Media to reside
-    :param S3HLS                S3 path for HLS transcode files
-    :return:
-    """
-    LOGGER.info("Updating Job Settings...")
-    jobsettings['OutputGroups'][0]['OutputGroupSettings']['HlsGroupSettings']['Destination'] \
-    = destinationBucket + '/' + S3HLS
-    
-    LOGGER.info("Updated Job Settings...")
+         import logging
+         import subprocess
+         import xml.etree.ElementTree as ET
+         import boto3
+         import os 
+         import json
+         import uuid
+         
+         S3 = boto3.client("s3")
+         LOGGER = logging.getLogger('boto3')
+         LOGGER.setLevel(logging.INFO)
+         REGION = os.environ['AWS_DEFAULT_REGION']
+         
+         # Get the account-specific mediaconvert endpoint for this region and chache them
+         if 'MEDIACONVERT_ENDPOINT' in os.environ:
+             ENDPOINTS = os.environ["MEDIACONVERT_ENDPOINT"]
+         else:
+             try:
+                 MC = boto3.client('mediaconvert', region_name=REGION)
+                 response = MC.describe_endpoints()
+             except Exception as e:
+                 print("Exception:\n", e)
+                 raise 
+             else:
+                 ENDPOINTS = response["Endpoints"][0]["Url"]
+                 # Cache the mediaconvert endpoint in order to avoid getting throttled on
+                 # the DescribeEndpoints API.
+                 os.environ["MEDIACONVERT_ENDPOINT"] = ENDPOINTS
+         
+         # Add the account-specific endpoint to the client session 
+         MEDIACONVERT = boto3.client('mediaconvert', region_name=REGION, endpoint_url=ENDPOINTS)
+         
+         destinationS3 = 's3://' + os.environ['DestinationBucket']
+         mediaConvertRole = os.environ['MediaConvertRole']
+         
+         def lambda_handler(event, context):
+             statusCode = 200
+             body = {}
+             
+             try:
+                 #Grab Event Info + Enviornment Variables
+                 assetID = str(uuid.uuid4())
+                 jobMetadata = {'assetID': assetID}
+                 sourceS3Bucket = event['Records'][0]['s3']['bucket']['name']
+                 sourceS3Key = event['Records'][0]['s3']['object']['key']
+                 sourceS3 = 's3://'+ sourceS3Bucket + '/' + sourceS3Key
+                 sourceS3Basename = os.path.splitext(os.path.basename(sourceS3))[0]
+                 
+                 # Loop through records provided by S3 Event trigger
+                 for s3_record in event['Records']:
+                     LOGGER.info("Working on new s3_record...")
+                     
+                     # Extract the Key and Bucket names for the asset uploaded to S3
+                     key = s3_record['s3']['object']['key']
+                     bucket = s3_record['s3']['bucket']['name']
+                     LOGGER.info("Bucket: {} \t Key: {}".format(bucket, key))
+                     
+                     # Load Job Settings Template
+                     LOGGER.info("Loading Job Settings...")
+                     with open('job_template.json') as json_data:
+                         jobTemplate = json.load(json_data)
+                         LOGGER.info("Input JobSettings:")
+                         jobSettings=jobTemplate['Settings']
+                         jobSettings['Inputs'][0]['FileInput'] = sourceS3
+                        
+                     basekey = 'assets/' 
+                     S3KeyHLS = basekey + assetID +'/HLS/'+ sourceS3Basename
+             
+                     LOGGER.info("Creating MediaConvert Job...") 
+                     
+                     #update job.json
+                     update_job_settings(jobSettings,assetID,destinationS3,S3KeyHLS)
+                     MEDIACONVERT.create_job(Role=mediaConvertRole, UserMetadata=jobMetadata, Settings=jobSettings, StatusUpdateInterval="SECONDS_10")
+         
+             except Exception as e:
+                 print ('Exception: %s' % e)
+                 statusCode = 500
+                 raise
+         
+             finally:
+                 return {
+                     'statusCode': statusCode,
+                     'body': json.dumps(body),
+                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+                 
+             }    
+         def update_job_settings(jobsettings,assetID,destinationBucket,S3HLS):
+             """
+             Update MediaConvert Job Settings
+             
+             :param jobsettings:         Loaded JobSettings JSON template
+             :param assetID:             Tagged Metadata ID
+             :param destinationBucket:   Bucket for Transcoded Media to reside
+             :param S3HLS                S3 path for HLS transcode files
+             :return:
+             """
+             LOGGER.info("Updating Job Settings...")
+             jobsettings['OutputGroups'][0]['OutputGroupSettings']['HlsGroupSettings']['Destination'] \
+             = destinationBucket + '/' + S3HLS
+             
+             LOGGER.info("Updated Job Settings...")
 
 
 
