@@ -16,7 +16,7 @@ The following services / resources are utilized:
 - Security Groups (SGs)
 - Identity and Access Management (IAM)
 - Amazon Elastic Compute Cloud (EC2)
-- AWS Systems Manager (SSM
+- AWS Systems Manager (SSM)
 - Application Load Balancer
 - Amazon Simple Storage Service (S3)
 - Autoscaling Groups (ASGs)
