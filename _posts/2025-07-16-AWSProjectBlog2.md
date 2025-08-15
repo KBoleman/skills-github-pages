@@ -124,3 +124,175 @@ Apple HLS: an adaptive bitrate stack that encodes the source into mutliple files
 I ran into a problem accessing the video through the browser; the page read Access Denied. I jumped back to the MediaConvert configuration and realized that I forgot to add the "/assets/VANLIFE/HLS/" to the back of the destination when creating the job. After correcting my error, I edited the instructions to reflect the proper setup. Still, after correcting this mistake, I was denied access to the content through the browser. So now I'm thinking "Okay, Access Denied? That sounds like an S3 or CloudFront issue". When I'm checking to verfiy the CORS policy has been enabled, I notice that the destination bucket blocks all public access. Once I allow unconditional public access, I'm able to view the video in the browser. Unconditional public access isn't ideal so, I check for ways to mimimize access.
 
 I removed all public access once again, but I'm still able to access the page now. I thought that this could've been a cached video and not coming directly from the bucket, but when I disable caching in CloudFront I'm still able to access the video. The most likely cause of my problem was a typo in pasting the URL. One extra period or dash at the end produces the same error message I mentioned before.
+
+### Takeaways
+* Make sure that URLS are exact to the character
+* Browser accessibility issues may stem from S3 configuration
+-----
+## Automation
+
+### Steps
+1. Create an IAM Role
+  - Create a role for Lambda
+  - Choose the role "AWSLambdaBasicExecutionRole"
+  - Enter the name "VODLambdaRole"
+  - Finish creating the role then add the following inline policy:
+    {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*",
+            "Effect": "Allow",
+            "Sid": "Logging"
+        },
+        {
+            "Action": [
+                "iam:PassRole"
+            ],
+            "Resource": [
+                "<ARN for VODMediaConvertRole>"
+            ],
+            "Effect": "Allow",
+            "Sid": "PassRole"
+        },
+        {
+            "Action": [
+                "mediaconvert:*"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Allow",
+            "Sid": "MediaConvertService"
+        }
+    ]
+}
+   - Under resource, add the ARN for the VODMediaConvertRole created earlier
+   - Enter VODLambdaPolicy as the policy name
+   - Create policy
+2. Create a Lambda function
+   - Start a new function from scratch and name it VodLambdaConvert
+   - Run it on the lastest version of python
+   - Choose VODLambdaRole as the execution role and finish creating
+   - Configure a new trigger
+     * Trigger type: S3
+     * Bucket: source bucket
+     * Event: All object create events
+     * Acknoledge the Recursive Invocation then finish creating the trigger
+   - Configure environment variables as key-value pairs
+     * DestinationBucket: name of media bucket
+     * MediaConvertRole: name of media convert role
+   - Under general configuration, set the timeout to 2 minutes
+   - Copy the following code and paste it into the lambda_function.py file:
+
+import logging
+import subprocess
+import xml.etree.ElementTree as ET
+import boto3
+import os 
+import json
+import uuid
+
+S3 = boto3.client("s3")
+LOGGER = logging.getLogger('boto3')
+LOGGER.setLevel(logging.INFO)
+REGION = os.environ['AWS_DEFAULT_REGION']
+
+\# Get the account-specific mediaconvert endpoint for this region and chache them
+if 'MEDIACONVERT_ENDPOINT' in os.environ:
+    ENDPOINTS = os.environ["MEDIACONVERT_ENDPOINT"]
+else:
+    try:
+        MC = boto3.client('mediaconvert', region_name=REGION)
+        response = MC.describe_endpoints()
+    except Exception as e:
+        print("Exception:\n", e)
+        raise 
+    else:
+        ENDPOINTS = response["Endpoints"][0]["Url"]
+        # Cache the mediaconvert endpoint in order to avoid getting throttled on
+        # the DescribeEndpoints API.
+        os.environ["MEDIACONVERT_ENDPOINT"] = ENDPOINTS
+
+\# Add the account-specific endpoint to the client session 
+MEDIACONVERT = boto3.client('mediaconvert', region_name=REGION, endpoint_url=ENDPOINTS)
+
+destinationS3 = 's3://' + os.environ['DestinationBucket']
+mediaConvertRole = os.environ['MediaConvertRole']
+
+def lambda_handler(event, context):
+    statusCode = 200
+    body = {}
+    
+    try:
+        #Grab Event Info + Enviornment Variables
+        assetID = str(uuid.uuid4())
+        jobMetadata = {'assetID': assetID}
+        sourceS3Bucket = event['Records'][0]['s3']['bucket']['name']
+        sourceS3Key = event['Records'][0]['s3']['object']['key']
+        sourceS3 = 's3://'+ sourceS3Bucket + '/' + sourceS3Key
+        sourceS3Basename = os.path.splitext(os.path.basename(sourceS3))[0]
+        
+        # Loop through records provided by S3 Event trigger
+        for s3_record in event['Records']:
+            LOGGER.info("Working on new s3_record...")
+            
+            # Extract the Key and Bucket names for the asset uploaded to S3
+            key = s3_record['s3']['object']['key']
+            bucket = s3_record['s3']['bucket']['name']
+            LOGGER.info("Bucket: {} \t Key: {}".format(bucket, key))
+            
+            # Load Job Settings Template
+            LOGGER.info("Loading Job Settings...")
+            with open('job_template.json') as json_data:
+                jobTemplate = json.load(json_data)
+                LOGGER.info("Input JobSettings:")
+                jobSettings=jobTemplate['Settings']
+                jobSettings['Inputs'][0]['FileInput'] = sourceS3
+               
+            basekey = 'assets/' 
+            S3KeyHLS = basekey + assetID +'/HLS/'+ sourceS3Basename
+    
+            LOGGER.info("Creating MediaConvert Job...") 
+            
+            #update job.json
+            update_job_settings(jobSettings,assetID,destinationS3,S3KeyHLS)
+            MEDIACONVERT.create_job(Role=mediaConvertRole, UserMetadata=jobMetadata, Settings=jobSettings, StatusUpdateInterval="SECONDS_10")
+
+    except Exception as e:
+        print ('Exception: %s' % e)
+        statusCode = 500
+        raise
+
+    finally:
+        return {
+            'statusCode': statusCode,
+            'body': json.dumps(body),
+            'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
+        
+    }    
+def update_job_settings(jobsettings,assetID,destinationBucket,S3HLS):
+    """
+    Update MediaConvert Job Settings
+    
+    :param jobsettings:         Loaded JobSettings JSON template
+    :param assetID:             Tagged Metadata ID
+    :param destinationBucket:   Bucket for Transcoded Media to reside
+    :param S3HLS                S3 path for HLS transcode files
+    :return:
+    """
+    LOGGER.info("Updating Job Settings...")
+    jobsettings['OutputGroups'][0]['OutputGroupSettings']['HlsGroupSettings']['Destination'] \
+    = destinationBucket + '/' + S3HLS
+    
+    LOGGER.info("Updated Job Settings...")
+
+
+
+## Takeaways
+* If a role is not create for a particular service, then the service will not trust it, and not allow the role to be used
