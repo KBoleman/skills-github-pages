@@ -91,7 +91,7 @@ Apple HLS: an adaptive bitrate stack that encodes the source into mutliple files
    - Scroll down and add two more outputs (not output groups)
    - Set the configurations for Output 1
       * Name: _360
-      * Segment: \$dt$ , this appends datetime to each media segment for identification and the prevention of accidental overrides
+      * Segment: \$dt\\$ , this appends datetime to each media segment for identification and the prevention of accidental overrides
       * Resolution (w x h): 640 and 360
       * Rate Control Mode: QVBR
       * Quality Tunning Level: Single Pass HQ
