@@ -34,22 +34,23 @@ CDN Benefits:
    - Follow all the instructions in step 1
    - Enable bucket versioning then create the bucket
 3. Add the following CORS configuration to the destination bucket:
-   [
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET"
-        ],
-        "AllowedOrigins": [
-            "*"
-      ],
-        "ExposeHeaders": [],
-        "MaxAgeSeconds": 3000
-    }
-   ]
-4. Create an IAM Role
+   
+         [
+          {
+              "AllowedHeaders": [
+                  "*"
+              ],
+              "AllowedMethods": [
+                  "GET"
+              ],
+              "AllowedOrigins": [
+                  "*"
+            ],
+              "ExposeHeaders": [],
+              "MaxAgeSeconds": 3000
+          }
+         ]
+5. Create an IAM Role
    - Select the AWS Service role type
    - Select the MediaConvert use case
    - Name the role "vod-MediaConvertRole", then finish creating
@@ -137,41 +138,42 @@ I removed all public access once again, but I'm still able to access the page no
   - Choose the role "AWSLambdaBasicExecutionRole"
   - Enter the name "VODLambdaRole"
   - Finish creating the role then add the following inline policy:
-    {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-            ],
-            "Resource": "*",
-            "Effect": "Allow",
-            "Sid": "Logging"
-        },
-        {
-            "Action": [
-                "iam:PassRole"
-            ],
-            "Resource": [
-                "<ARN for VODMediaConvertRole>"
-            ],
-            "Effect": "Allow",
-            "Sid": "PassRole"
-        },
-        {
-            "Action": [
-                "mediaconvert:*"
-            ],
-            "Resource": [
-                "*"
-            ],
-            "Effect": "Allow",
-            "Sid": "MediaConvertService"
-        }
-    ]
-}
+    
+          {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Action": [
+                      "logs:CreateLogGroup",
+                      "logs:CreateLogStream",
+                      "logs:PutLogEvents"
+                  ],
+                  "Resource": "*",
+                  "Effect": "Allow",
+                  "Sid": "Logging"
+              },
+              {
+                  "Action": [
+                      "iam:PassRole"
+                  ],
+                  "Resource": [
+                      "<ARN for VODMediaConvertRole>"
+                  ],
+                  "Effect": "Allow",
+                  "Sid": "PassRole"
+              },
+              {
+                  "Action": [
+                      "mediaconvert:*"
+                  ],
+                  "Resource": [
+                      "*"
+                  ],
+                  "Effect": "Allow",
+                  "Sid": "MediaConvertService"
+              }
+          ]
+         }
    - Under resource, add the ARN for the VODMediaConvertRole created earlier
    - Enter VODLambdaPolicy as the policy name
    - Create policy
