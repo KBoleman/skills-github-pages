@@ -292,7 +292,5 @@ I removed all public access once again, but I'm still able to access the page no
              
              LOGGER.info("Updated Job Settings...")
 
-
-
 ## Takeaways
 * If a role is not create for a particular service, then the service will not trust it, and not allow the role to be used
