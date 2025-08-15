@@ -50,6 +50,7 @@ CDN Benefits:
               "MaxAgeSeconds": 3000
           }
          ]
+   
 5. Create an IAM Role
    - Select the AWS Service role type
    - Select the MediaConvert use case
@@ -174,6 +175,7 @@ I removed all public access once again, but I'm still able to access the page no
               }
           ]
          }
+   
    - Under resource, add the ARN for the VODMediaConvertRole created earlier
    - Enter VODLambdaPolicy as the policy name
    - Create policy
@@ -293,6 +295,66 @@ I removed all public access once again, but I'm still able to access the page no
              = destinationBucket + '/' + S3HLS
              
              LOGGER.info("Updated Job Settings...")
+     
+   - Create a new file and name it job_template.json
+   - Import the JSON from the job template created earlier then save
+   - Deploy the function
+3. Test the lambda function
+   - Select Test, then create a new event named ConvertText
+   - Under Event JSON, paste the following:
+     
+              {
+           "Records": [
+             {
+               "eventVersion": "2.0",
+               "eventTime": "2017-08-08T00:19:56.995Z",
+               "requestParameters": {
+                 "sourceIPAddress": "54.240.197.233"
+               },
+               "s3": {
+                 "configurationId": "90bf2f16-1bdf-4de8-bc24-b4bb5cffd5b2",
+                 "object": {
+                   "eTag": "2fb17542d1a80a7cf3f7643da90cc6f4-18",
+                   "key": "VANLIFE_test.m2ts",
+                   "sequencer": "005989030743D59111",
+                   "size": 143005084
+                 },
+                 "bucket": {
+                   "ownerIdentity": {
+                     "principalId": ""
+                   },
+                   "name": "vod-source-us-east1-YOURLASTNAME-MMDDYYYY",
+                   "arn": "arn:aws:s3:::vod-source-us-east1-YOURLASTNAME-MMDDYYYY"
+                 },
+                 "s3SchemaVersion": "1.0"
+               },
+               "responseElements": {
+                 "x-amz-id-2": "K5eJLBzGn/9NDdPu6u3c9NcwGKNklZyY5ArO9QmGa/t6VH2HfUHHhPuwz2zH1Lz4",
+                 "x-amz-request-id": "E68D073BC46031E2"
+               },
+               "awsRegion": "us-east-1",
+               "eventName": "ObjectCreated:CompleteMultipartUpload",
+               "userIdentity": {
+                 "principalId": ""
+               },
+               "eventSource": "aws:s3"
+             }
+           ]
+         }
+   
+   - Save the JSON, then test the event to verify proper functioning. Successful execution will read:
 
+            {
+           "statusCode": 200,
+           "body": "{}",
+           "headers": {
+             "Content-Type": "application/json",
+             "Access-Control-Allow-Origin": "*"
+           }
+         }
+     
+4. Test Automation
+   -k
+   
 ## Takeaways
 * If a role is not create for a particular service, then the service will not trust it, and not allow the role to be used
