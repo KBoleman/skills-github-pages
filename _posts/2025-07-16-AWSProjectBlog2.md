@@ -15,6 +15,8 @@ The following services / resources are utilized:
 - Amazon S3
 - Amazon CloudFront
 - AWS Elemental MediaConvert
+- AWS Lambda
+- AWS Multi Access Point
 -----
 ## Storage
 My goal here is to create and configure a system of storage
@@ -354,9 +356,51 @@ I removed all public access once again, but I'm still able to access the page no
          }
      
 4. Test Automation
-   -
 
 I experienced famiilar difficulties trying to access the video through the web browser. Blue hat Sally. I was able to access the video by copying the CloudFront distrubution name, adding the manifest file's key to the end (this is the path URL to the file), then search the conjoined urls
+-----
+Region Redundancy
+
+In order to protect the workflow from the effects of regional failure, MediaConvert must be deployed and configured for multiple regions. 
+
+1. Set Up Cross Region Redundant Storage
+   - Create a second pair of source and destination buckets in another region, such as us-west-1
+   - Enable bucket versioning for the destination bucket and add the following CORS configuration to its permissions:
+     
+                    [
+                   {
+                       "AllowedHeaders": [
+                           "*"
+                       ],
+                       "AllowedMethods": [
+                           "GET"
+                       ],
+                       "AllowedOrigins": [
+                           "*"
+                       ],
+                       "ExposeHeaders": [],
+                       "MaxAgeSeconds": 3000
+                   }
+                  ]
+
+
+   2. Configure Cross Region Replication
+  
+      Quick Notes
+      * Replication enables automatic, asynchronous copying of objects across buckets. Replication be configured for buckets of different accounts
+      * Bi-Directional Replication: replicate occurs mutually between two buckets
+      * Replication is configured via rules. Since there is no rule bi-directional replication, bi-directionality is setup via individual rules
+
+   Replication for US-EAST-1 --> US-WEST-1
+   - Access the original destination bucket, and under the Management tab, click create Replication Rule
+   - Name it something unique to distinguish it (like "east-to-west" in my case)
+   - Leave the status enabled
+   - Apply the rule scope to all objects in the bucket
+   - Assign the alternate bucket as the destination
+
+      
+
+
    
 ## Takeaways
 * If a role is not create for a particular service, then the service will not trust it, and not allow the role to be used
