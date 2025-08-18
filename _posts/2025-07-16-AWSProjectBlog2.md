@@ -401,9 +401,11 @@ In order to protect the workflow from the effects of regional failure, MediaConv
       - Select the option to replicate objects encrypted with AWS KMS
       - Select the available aws/s3 key
    - Opt out of replacing available objects, then submit
-  
+   - Repeat the steps listed above, this time configuring for the alternate bucket
+
+     Test Bi-Directional Cross-Region Redundancy
+   - Add a small file to both destination buckets and see if a replicas are added. These files will have a status of REPLICA found under the properties tab. It took more time for the replica to appear in the       popoluated bucket than the empty bucket
    - 
-      
 
 
    
