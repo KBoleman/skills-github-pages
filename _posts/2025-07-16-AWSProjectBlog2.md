@@ -397,7 +397,12 @@ In order to protect the workflow from the effects of regional failure, MediaConv
    - Leave the status enabled
    - Apply the rule scope to all objects in the bucket
    - Assign the alternate bucket as the destination
-
+   - Create a new IAM role
+      - Select the option to replicate objects encrypted with AWS KMS
+      - Select the available aws/s3 key
+   - Opt out of replacing available objects, then submit
+  
+   - 
       
 
 
