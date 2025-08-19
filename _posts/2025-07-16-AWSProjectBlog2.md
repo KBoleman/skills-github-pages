@@ -192,7 +192,7 @@ I removed all public access once again, but I'm still able to access the page no
      * Acknoledge the Recursive Invocation then finish creating the trigger
    - Configure environment variables as key-value pairs
      * DestinationBucket: name of media bucket
-     * MediaConvertRole: name of media convert role
+     * MediaConvertRole: ARM of media convert role
    - Under general configuration, set the timeout to 2 minutes
    - Copy the following code and paste it into the lambda_function.py file:
 
@@ -398,14 +398,32 @@ In order to protect the workflow from the effects of regional failure, MediaConv
    - Apply the rule scope to all objects in the bucket
    - Assign the alternate bucket as the destination
    - Create a new IAM role
-      - Select the option to replicate objects encrypted with AWS KMS
-      - Select the available aws/s3 key
+      * Select the option to replicate objects encrypted with AWS KMS
+      * Select the available aws/s3 key
    - Opt out of replacing available objects, then submit
    - Repeat the steps listed above, this time configuring for the alternate bucket
 
      Test Bi-Directional Cross-Region Redundancy
    - Add a small file to both destination buckets and see if a replicas are added. These files will have a status of REPLICA found under the properties tab. It took more time for the replica to appear in the       popoluated bucket than the empty bucket
-   - 
+
+   Automation
+   - Circle back to the lambda function created earlier
+   - Download the function as a .zip file
+   - Switch to the alternate region and create new function from scratch
+   - Create a unique name and set the runtime to the latest version of Python
+   - Apply the VodLambdaRole the finish creating the function
+   - Upload the .zip file and save
+   - Add S3 as a trigger and set the following configurations:
+      * Bucket: alternate source bucket
+      * Event Types: all object create events
+      * Acknowledge the recursive innovation warning, then finish adding the trigger
+    - Configure Environment Variables:
+      * DestinationBucket: name of alternate destination bucket
+      * MediaConvertRole: ARN of MediaConvert role
+    - Under General Configuration, set a timeout of 2 minutes
+    - Deploy service then test
+     
+
 
 
    
