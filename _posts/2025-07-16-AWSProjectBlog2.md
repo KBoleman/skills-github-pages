@@ -357,7 +357,7 @@ I removed all public access once again, but I'm still able to access the page no
      
 4. Test Automation
 
-I experienced famiilar difficulties trying to access the video through the web browser. Blue hat Sally. I was able to access the video by copying the CloudFront distrubution name, adding the manifest file's key to the end (this is the path URL to the file), then search the conjoined urls
+I experienced famiilar difficulties trying to access the video through the web browser. Blue hat Sally. I was able to access the video by copying the CloudFront distrubution name, adding the manifest file's key to the end (this is the path URL to the file), then searching the conjoined urls
 -----
 Region Redundancy
 
@@ -422,8 +422,29 @@ In order to protect the workflow from the effects of regional failure, MediaConv
       * MediaConvertRole: ARN of MediaConvert role
     - Under General Configuration, set a timeout of 2 minutes
     - Deploy service then test
-     
 
+   CloudFront Origin Redundancy
+   - Navigate to CloudFront and edit the origin of the original distribution created earlier
+   - Under additional settings, change conenction attempts to 2, connection timeout to 3, then save changes
+   - Create a second origin and select the alternate destination bucket as the origin domain
+   - Select Origin Access Control Settings (recommended) and create a new OAC policy
+   - Copy the policy then head to the alternate destination bucket's permissions (there should be a link that opens a new tab)
+   - Paste this policy into the bucket policy and save changes
+   - Switch back to the CloudFront page
+   - Under additional settings, change conenction attempts to 2, connection timeout to 3, then save changes
+   - Finish creating the origin
+   - Create a new origin group
+   - Add both of the origins
+   - Enter a Unique Name
+   - Under Failover Critera, select all the origin error codes
+   - Finish creating the origin group
+   - Under the Behaviors tab, select Default (*), then edit
+   - Under origins and origin groups, select the origin group just created, then save
+   - Check on the distrubition, and check that the status reads "enabled" and that last modified reads a date
+  
+   S3 Multi-Region Access Point for Source Assets
+
+   My goal here is to create an S3 Multi-Region Access point to allow users to upload assets to the closet bucket or a bucket available in the case of failure
 
 
    
