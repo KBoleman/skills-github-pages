@@ -358,6 +358,7 @@ I removed all public access once again, but I'm still able to access the page no
 4. Test Automation
 
 I experienced famiilar difficulties trying to access the video through the web browser. Blue hat Sally. I was able to access the video by copying the CloudFront distrubution name, adding the manifest file's key to the end (this is the path URL to the file), then searching the conjoined urls
+
 -----
 Region Redundancy
 
@@ -404,7 +405,7 @@ In order to protect the workflow from the effects of regional failure, MediaConv
    - Repeat the steps listed above, this time configuring for the alternate bucket
 
      Test Bi-Directional Cross-Region Redundancy
-   - Add a small file to both destination buckets and see if a replicas are added. These files will have a status of REPLICA found under the properties tab. It took more time for the replica to appear in the       popoluated bucket than the empty bucket
+   - Add a small file to both destination buckets and see if a replicas are added. These files will have a status of REPLICA found under the properties tab. It took more time for the replica to appear in the populated bucket than the empty bucket
 
    Automation
    - Circle back to the lambda function created earlier
