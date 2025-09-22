@@ -1,4 +1,4 @@
-# AWS Projects: QuickSight Workshop
+# AWS Projects: QuickSight Workshop / Author Workshop
 ### Exploring Different Aspects of QuickSight
 ### Timothy Coleman
 ### 09/05/25
@@ -10,4 +10,4 @@ Hello, my name is Timothy Coleman, and I'm a UCLA undergrad working towards beco
 
 The goal of this project is to learn how to use QuickSight to connect to data, build visuals, create calculations, design interactivity, leverage ML, and share dashboards.
 
- # Author Workshop
+ ## 
