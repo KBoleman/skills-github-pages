@@ -58,5 +58,9 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 2. Add the Region and Subregion tabs to the Row field
 3. Add the Order Date to the Column field and aggregate by year
 4. Select "Format Visual"
-5. Under pivot options, selecting the eye icon will remove any single metric that is repeated
+
+ ### Exercise 9 - Add a Filter Control
+ 1. Select the Pivot Table, followed by the Fliter icon in the toolbar
+ 2. 
+6. Under pivot options, selecting the eye icon will remove any single metric that is repeated
 
