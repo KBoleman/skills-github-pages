@@ -15,7 +15,24 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 **Q: What is Quicksight?**
 - Quicksight is a cloud-oriented business intelligence service
 
-### Steps
+### Exercise 1 - Creating Data Visualizations
 1. Select "New Dataset", then upload a csv file
 2. Seleect "Visualize data" to enter _Analysis Mode_
 3. Create an Interactive Sheet
+
+### Exercise 2 - Aggregating Sales by Month
+1. Select "Order Date" and "Sales" from the Fields
+2. Select the arrow next to "Order Date"
+3. Select aggregation by month.
+
+### Exercise 3 - Forecasting
+1. Select your graph
+2. Select the "Visual" icon from the toolbar
+3. Selecting the elipses located at the upper right corner of the image
+4. Select "Add forecast" and edit its properties.
+
+### Visualize Sales Quarter over Quarter
+1. Create add a new KPI visual
+2. From Fields, select "Sales" and "Order Date"
+3. Change the aggregation level to Quarter
+4. 
