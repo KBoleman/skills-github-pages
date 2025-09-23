@@ -46,6 +46,13 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 ### Exercise 6 - Visualize Sales in Industry
 1. Create a donut chart visual
 2. From Fields, select "Industry" and "Sales"
-3. 
-5. Change the aggregation level to Quarter
-6. 
+3. Select the eye icon next to the Metrics proprty to see measure values
+
+### Exercise 7 - Drill Down from Industry to Customer
+1. Select the Sales by Industry visual
+2. Drag the Customer tag under the Industry tag in the GROUP/COLOR field
+3. Select the name or slice of an industry, then choose "Drill down to Customer"
+
+### Exercise 8 - Creating a Pivot Tables
+1. Add a pivot table to the dashboard
+2. 
