@@ -55,4 +55,8 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 
 ### Exercise 8 - Creating a Pivot Tables
 1. Add a pivot table to the dashboard
-2. 
+2. Add the Region and Subregion tabs to the Row field
+3. Add the Order Date to the Column field and aggregate by year
+4. Select "Format Visual"
+5. Under pivot options, selecting the eye icon will remove any single metric that is repeated
+
