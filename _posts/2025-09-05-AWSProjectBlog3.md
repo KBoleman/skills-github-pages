@@ -15,6 +15,9 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 **Q: What is Quicksight?**
 - Quicksight is a cloud-oriented business intelligence service
 
+**Q: What is Aggregation**
+- Aggregation refers to the grouping of data together for categorical analysis.
+
 ### Exercise 1 - Creating Data Visualizations
 1. Select "New Dataset", then upload a csv file
 2. Seleect "Visualize data" to enter _Analysis Mode_
@@ -31,8 +34,18 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 3. Selecting the elipses located at the upper right corner of the image
 4. Select "Add forecast" and edit its properties.
 
-### Visualize Sales Quarter over Quarter
-1. Create add a new KPI visual
+### Exercise 4 - Visualize Sales Quarter over Quarter
+1. Add the KPI visual to the dashborad
 2. From Fields, select "Sales" and "Order Date"
-3. Change the aggregation level to Quarter
-4. 
+3. Enabling tooltip allows values to be displayed by hovering the cursor over different parts of the graph
+
+ ### Exercise 5 - Add Suggested Insights
+ 1. Select the KPI visual, then select the Insight icon (lightbulb) in the toolbar
+ 2. Select any insight to describe the data
+
+### Exercise 6 - Visualize Sales in Industry
+1. Create a donut chart visual
+2. From Fields, select "Industry" and "Sales"
+3. 
+5. Change the aggregation level to Quarter
+6. 
