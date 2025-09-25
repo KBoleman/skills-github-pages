@@ -60,11 +60,11 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 4. Select "Format Visual"
 5. Under pivot options, selecting the eye icon will remove any single metric that is repeated
 
- ### Exercise 9 - Add a Filter Control
- 1. Select the Pivot Table, followed by the Fliter icon in the toolbar
- 2. Add a Segment Filter
- 3. Apply the filter to the entire sheet
- 4. Select the ellipses on the filter and add a control to the inside of the sheet
+### Exercise 9 - Add a Filter Control
+1. Select the Pivot Table, followed by the Fliter icon in the toolbar
+2. Add a Segment Filter
+3. Apply the filter to the entire sheet
+4. Select the ellipses on the filter and add a control to the inside of the sheet
 
 ### Exercise 10 - Add a Filter Action
 1. Select the donut chart
@@ -85,3 +85,21 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 2. Enter "Test Dashboard Mailout" into the email header and subject line
 3. Select the file attachment option
 4. Send the test
+
+## Enhancing My Dashboard
+
+My goal for this section is to improve the quality of my dashboard through themes, sheets, field formats, visual formatting, and layout settings
+
+### Exercise 1 - Dupolicate Analysis
+1. Return to the initial analysis
+2. Under File, select "Save as Analysis"
+3. Name this new file
+
+### Exercise 2 - Applying Themes
+1. Under the Edit tab, select "Themes"
+2. Select the ellipses next to the Seaside theme, then select "Save as"
+3. Under the Data Series tab, select the first color to change it to another
+4. Under the Sheets tab, deselect the Gutter and Margin icons to add gaps between the visuals and the page borders
+5. Save then apply
+
+### Exercise 3
