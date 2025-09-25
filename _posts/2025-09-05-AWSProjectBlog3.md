@@ -39,7 +39,7 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 2. From Fields, select "Sales" and "Order Date"
 3. Enabling tooltip allows values to be displayed by hovering the cursor over different parts of the graph
 
- ### Exercise 5 - Add Suggested Insights
+### Exercise 5 - Add Suggested Insights
  1. Select the KPI visual, then select the Insight icon (lightbulb) in the toolbar
  2. Select any insight to describe the data
 
@@ -58,9 +58,30 @@ The goal of this QuickSight project series is to learn how to use QuickSight to 
 2. Add the Region and Subregion tabs to the Row field
 3. Add the Order Date to the Column field and aggregate by year
 4. Select "Format Visual"
+5. Under pivot options, selecting the eye icon will remove any single metric that is repeated
 
  ### Exercise 9 - Add a Filter Control
  1. Select the Pivot Table, followed by the Fliter icon in the toolbar
- 2. 
-6. Under pivot options, selecting the eye icon will remove any single metric that is repeated
+ 2. Add a Segment Filter
+ 3. Apply the filter to the entire sheet
+ 4. Select the ellipses on the filter and add a control to the inside of the sheet
 
+### Exercise 10 - Add a Filter Action
+1. Select the donut chart
+2. Under "Interactions", select "Add Action"
+3. Configure an action to whatever settings are desired
+
+### Exercise 11 - Change Name of Visual
+1. Select a visual
+2. Open its visual menu then select the ellipses to expand the settings bar
+3. Select the brush icon to edit the title
+
+### Exercise 12 - Publish a Dashboard
+1. Select "Publish"
+2. Name the dashboard
+
+### Exercise 13 - Send a Email Report
+1. Select "Scheduling" from the topbar menu, then "Schedules"
+2. Enter "Test Dashboard Mailout" into the email header and subject line
+3. Select the file attachment option
+4. Send the test
