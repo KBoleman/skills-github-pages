@@ -103,3 +103,4 @@ My goal for this section is to improve the quality of my dashboard through theme
 5. Save then apply
 
 ### Exercise 3
+1. In the Fields list, select the elipsis next t
